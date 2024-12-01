@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Tells us which routes
 router.get("/", (req, res) => {
-  res.send("Books route");
+  res.render("books", { title: "Books" });
 });
 
 // For exporting the router

@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-// This is the Authors Route via method GET/authors
+// Tells us which routes
 router.get("/", (req, res) => {
-  res.render("reviews", { title: "Reviews" });
+  res.render("category", { title: "Category" });
 });
 
+// For exporting the router
 module.exports = router;
