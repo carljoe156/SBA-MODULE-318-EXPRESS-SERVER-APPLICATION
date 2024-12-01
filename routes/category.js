@@ -1,10 +1,15 @@
 const express = require("express");
+const fs = require("fs");
 const router = express.Router();
 
-// Tells us which routes
+//  A helper function to read & write data
+const readCategoriesData = () =>
+  JSON.parse(fs.readFileSync("./data/categories.json", "utf8"));
+
+// Gets all categories
 router.get("/", (req, res) => {
-  res.render("category", { title: "Category" });
+  const categories = readCategoriesData();
+  res.json(categories);
 });
 
-// For exporting the router
 module.exports = router;

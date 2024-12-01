@@ -1,9 +1,15 @@
 const express = require("express");
+const fs = require("fs");
 const router = express.Router();
 
-// This is the Authors Route via method GET/authors
+//  A helper function to read & write data
+const readAuthorsData = () =>
+  JSON.parse(fs.readFileSync("./data/authors.json", "utf8"));
+
+// Gets all authors
 router.get("/", (req, res) => {
-  res.render("authors", { title: "Authors" });
+  const authors = readAuthorsData();
+  res.json(authors);
 });
 
 module.exports = router;

@@ -87,6 +87,84 @@ app.get("/categories-list", (req, res) => {
   res.render("categories", { categories: categories });
 });
 
+app.get("/books-list", (req, res) => {
+  const books = readDataFile("data/books.json"); // Gets books from JSON
+  res.render("books", { books: books });
+});
+
+app.get("/authors-list", (req, res) => {
+  const authors = readDataFile("data/authors.json"); // Gets authors from JSON
+  res.render("authors", { authors: authors });
+});
+
+app.get("/categories-list", (req, res) => {
+  const categories = readDataFile("data/categories.json"); // Gets categories from JSON
+  res.render("categories", { categories: categories });
+});
+
+//  Using POST route to add a new book, if you're a bibliophile of course!
+app.post("/books", (req, res) => {
+  const { bookName, bookAuthor, bookPages, bookPrice } = req.body;
+  const newBook = {
+    bookName,
+    bookAuthor,
+    bookPages,
+    bookPrice,
+    bookState: "Available",
+  };
+  const books = readDataFile("data/books.json");
+  books.push(newBook);
+  writeDataFile("data/books.json", books); // Should enable persistence in updating books list to JSON
+  res.redirect("/books-list");
+});
+
+// Using POST route to add a new author
+app.post("/authors", (req, res) => {
+  const { authorName, authorBio } = req.body;
+  const newAuthor = { authorName, authorBio };
+  const authors = readDataFile("data/authors.json");
+  authors.push(newAuthor);
+  writeDataFile("data/authors.json", authors); //Should enable persistence in updating authors list to JSON
+  res.redirect("/authors-list");
+});
+
+// Using POST route to add a new category
+app.post("/categories", (req, res) => {
+  const { categoryName, categoryDescription } = req.body;
+  const newCategory = { categoryName, categoryDescription };
+  const categories = readDataFile("data/categories.json");
+  categories.push(newCategory);
+  writeDataFile("data/categories.json", categories); //Should enable persistence in updating categories list to JSON
+  res.redirect("/categories-list");
+});
+
+// These are tests
+// Using POST route to add new book
+app.post("/", (req, res) => {
+  const inputBookName = req.body.bookName;
+  const inputBookAuthor = req.body.bookAuthor;
+  const inputBookPages = req.body.bookPages;
+  const inputBookPrice = req.body.bookPrice;
+
+  // Adds a new book to the books array
+  books.push({
+    bookName: inputBookName,
+    bookAuthor: inputBookAuthor,
+    bookPages: inputBookPages,
+    bookPrice: inputBookPrice,
+    bookState: "Available",
+  });
+
+  // After adding the book, redirect to the homepage
+  res.redirect("/");
+}); //fix
+
+// For Server middleware for error-handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send({ message: "Something went wrong!" });
+});
+
 //
 
 // // to read the json files
@@ -114,7 +192,7 @@ app.get("/categories-list", (req, res) => {
 //   }
 // });
 
-// For the Server
+// For the Server Start
 app.listen(port, () => {
   console.log(`Express is running on http://localhost:${port}`);
 });

@@ -1,9 +1,9 @@
-express = require("express");
-const router = express.Router();
+// express = require("express");
+// const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.render("index", { title: "LiberUnited" }); // Liber means books in Latin :)
-});
+// router.get("/", (req, res) => {
+//   res.render("index", { title: "LiberUnited" }); // Liber means books in Latin :)
+// });
 
-// For exporting the router
-module.exports = router;
+// // For exporting the router
+// module.exports = router;

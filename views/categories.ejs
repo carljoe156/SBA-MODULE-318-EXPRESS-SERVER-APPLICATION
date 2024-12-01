@@ -7,5 +7,38 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+    <!-- Display the categories -->
+    <ul>
+      <% categories.forEach(category => { %>
+      <li>
+        <%= category.categoryName %> - Description: <%=
+        category.categoryDescription %>
+      </li>
+      <% }) %>
+    </ul>
+
+    <!-- Input Here: Form to add a new category -->
+    <h2>Add a New Category</h2>
+    <form action="/categories" method="POST">
+      <input
+        type="text"
+        name="categoryName"
+        placeholder="Category Name"
+        required
+      /><br />
+      <textarea
+        name="categoryDescription"
+        placeholder="Category Description"
+        required
+      ></textarea
+      ><br />
+      <button type="submit">Add Category</button>
+    </form>
+
+    <!-- Link to our other pages -->
+    <br />
+    <a href="/books-list">View Books</a>
+    <a href="/authors-list">View Authors</a>
   </body>
 </html>

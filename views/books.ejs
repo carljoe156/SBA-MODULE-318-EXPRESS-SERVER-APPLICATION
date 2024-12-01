@@ -7,5 +7,23 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <!-- Our Book-list -->
+    <ul>
+      <% books.forEach(book => { %>
+      <li>
+        <%= book.bookName %> by <%= book.bookAuthor %> - Price: <%=
+        book.bookPrice %>
+      </li>
+      <% }) %>
+    </ul>
+
+    <!-- Input here: Add a new book form -->
+    <h2>Add New Book</h2>
+    <form action="/" method="POST">
+      <input type="text" name="bookName" placeholder="Book Name" required />
+      <input type="text" name="bookAuthor" placeholder="Author Name" required />
+      <input type="number" name="bookPrice" placeholder="Book Price" required />
+      <button type="submit">Add Book</button>
+    </form>
   </body>
 </html>
