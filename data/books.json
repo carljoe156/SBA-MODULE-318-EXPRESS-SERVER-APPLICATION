@@ -3,42 +3,82 @@
     "id": 1,
     "bookName": "Rudest Book Ever",
     "bookAuthor": "Shwetabh Gangwar",
-    "bookPrice": 240
+    "bookPrice": 240,
+    "reviews": []
   },
   {
     "id": 2,
     "bookName": "Do Epic Shit",
     "bookAuthor": "Ankur Warikoo",
-    "bookPrice": 200
+    "bookPrice": 200,
+    "reviews": []
   },
   {
-    "id": 1733016540208,
+    "id": 3,
     "bookName": "Atomic Habits",
     "bookAuthor": "James Clear",
-    "bookPrice": "200"
+    "bookPrice": 200,
+    "reviews": []
   },
   {
-    "id": 1733016788727,
-    "bookName": "Moby Dick",
-    "bookAuthor": "Herman Melville",
-    "bookPrice": "200"
-  },
-  {
-    "id": 1733017166236,
-    "bookName": "A christmas carol",
+    "id": 5,
+    "bookName": "A Christmas Carol",
     "bookAuthor": "Charles Dickens",
-    "bookPrice": "150"
+    "bookPrice": 150,
+    "reviews": []
   },
   {
-    "id": 1733018065956,
+    "id": 6,
     "bookName": "Atomic Habits",
     "bookAuthor": "James Clear",
-    "bookPrice": "200"
+    "bookPrice": 200,
+    "reviews": []
   },
   {
-    "id": 1733018144401,
+    "id": 7,
     "bookName": "Moby Dick",
     "bookAuthor": "Herman Melville",
-    "bookPrice": "500"
+    "bookPrice": 500,
+    "reviews": []
+  },
+  {
+    "id": 8,
+    "bookName": "Pride and Prejudice",
+    "bookAuthor": "Jane Austen",
+    "bookPrice": 300,
+    "bookState": "Available",
+    "reviews": []
+  },
+  {
+    "id": 9,
+    "bookName": "Brave New World",
+    "bookAuthor": "Aldous Huxley",
+    "bookPrice": 200,
+    "bookState": "Available",
+    "isFavorited": false
+  },
+  {
+    "id": 10,
+    "bookName": "To Kill a Mockingbird",
+    "bookAuthor": "Harper Lee",
+    "bookPrice": 200,
+    "bookState": "Available",
+    "isFavorited": false
+  },
+  {
+    "id": 11,
+    "bookName": "No Country for Old Men",
+    "bookAuthor": "Philip K. Dick",
+    "bookPrice": 200,
+    "bookState": "Available",
+    "isFavorited": false
+  },
+  {
+    "id": 12,
+    "bookName": "The Perks Of Being A Wallflower",
+    "bookAuthor": "Stephen Chbosky",
+    "bookPrice": "100",
+    "bookState": "Available",
+    "isFavorited": false
   }
 ]

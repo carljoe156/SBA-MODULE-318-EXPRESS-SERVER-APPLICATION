@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "name": "My Book Collection",
+    "books": [
+      {
+        "id": "1",
+        "bookName": "Book 1",
+        "bookAuthor": "Author 1",
+        "bookPages": 300,
+        "bookPrice": 20
+      },
+      {
+        "id": "2",
+        "bookName": "Book 2",
+        "bookAuthor": "Author 2",
+        "bookPages": 250,
+        "bookPrice": 15
+      }
+    ]
+  }
+]

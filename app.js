@@ -1,198 +1,272 @@
 const express = require("express");
-const indexRouter = require("./routes/index.js");
+const port = 3000;
+const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
-const bodyParser = require("body-parser");
 
-// These are the routes
-const bookRoutes = require("./routes/books");
-const authorRoutes = require("./routes/authors");
-const reviewRoutes = require("./routes/reviews");
+// Middleware
+const logger = require("./middlewares/logger");
+const validateBookInput = require("./middlewares/validateBookInput");
 
-const port = 3000; //my port can remove if anything
+// Routes
+const bookRoutes = require("./routes/bookRoutes");
+const authorRoutes = require("./routes/authorRoutes"); // Doesn't work, its apart of the Books route now
+const categoryRoutes = require("./routes/categoryRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 const app = express();
 
-// For the view engine start
-app.set("views", "views");
+let books = [];
+
+// Sets the view engine
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
-//Middleware
+// To Serve static files (CSS, images, etc.)
+app.use(express.static(path.join(__dirname, "public")));
+
+// To Body parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public")); // for serving static images and css files
 
-// Our next middleware checker
-const checkerMiddleware = (req, res, next) => {
-  console.log(
-    `${req.method} request to ${req.url} at ${new Date().toISOString()}`
-  );
-  next();
-};
-//active for all routes
-app.use(checkerMiddleware);
+// Our Custom middleware to log requests
+app.use(logger); // Logs each request
 
-// Our routes EndPoints (maybe you should access this ...)
-app.use("/", indexRouter);
-app.use("/books", bookRoutes); //  /api/books route for books (could use /api/books etc)
-app.use("/authors", authorRoutes); // /api/authors route for authors
-app.use("/categories", categoryRoutes); // /api/category route for category
-app.use("/reviews", reviewRoutes); // /api/reviews route for reviews
+// Routes
+app.use("/books", bookRoutes);
+app.use("/authors", authorRoutes); //remove this route, this is apart of the Books Route
+app.use("/categories", categoryRoutes);
+app.use("/reviews", reviewRoutes);
+app.use("/users", userRoutes);
 
-// for serving the "data" folder as static files // may have to change idk yet, I should be able to pull from for example /data/authors.json
-app.use("/data", express.static(path.join(__dirname, "data")));
+// Our Home route
+app.get("/", function (req, res) {
+  res.render("home", {
+    books: books, // Pass books data to the view
+  });
+});
 
-// We need to be able to update our JSON files
+// Added can remove with corresponding ejs
+// Function to read JSON data from files
+function readDataFile(filePath) {
+  const data = fs.readFileSync(filePath);
+  return JSON.parse(data);
+}
+
+// A Function to write data to JSON files for our Books-list and Reviews
 function writeDataFile(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
+// W.I.P
+app.get("/users", (req, res) => {
+  const users = readDataFile("data/users.json");
+  const books = readDataFile("data/books.json"); // Get books from JSON file
+  const authors = readDataFile("data/authors.json"); // Get authors from JSON file
+  res.render("users", { users: users, books, authors }); //
+});
 
-// Routes Get sections
-// For our Home route lists books
+// Home route We want to list our books on the page
+// Display authors
 app.get("/", (req, res) => {
-  const books = readDataFile("data/books.json"); // Gets books or listing from JSON file, can probably change this functionality in the future
-  res.render("home", { books: books });
+  const books = readDataFile("data/books.json"); // Get books from JSON file
+  const authors = readDataFile("data/authors.json"); // Get authors from JSON file
+  res.render("home", { books: books, authors: authors });
 });
 
-// To display our authors
-app.get("/authors", (req, res) => {
-  const authors = readDataFile("data/authors.json"); //Gets authors listing from JSON
-  res.json(authors);
-});
+// to show my collections
+// app.get("/", (req, res) => {
+//   const collections = readDataFile("data/collections.json"); // Get collections
+//   res.render("home", { collections: collections });
+// });
 
-// To display our books
-app.get("/books", (req, res) => {
-  const books = readDataFile("data/books.json"); //Gets authors listing from JSON
-  res.json(books);
-});
+// Display authors
+// app.get("/authors", (req, res) => {
+//   const authors = readDataFile("data/authors.json"); // Get authors from JSON file
+//   res.json(authors); // Respond with authors in JSON format
+// });
 
-// To display our categories
+// Display books
+// app.get("/books", (req, res) => {
+//   const books = readDataFile("data/books.json"); // Get books from JSON file
+//   res.json(books); // Respond with books in JSON format
+// });
+
+// Display our categories
 app.get("/categories", (req, res) => {
-  const categories = readDataFile("data/categories.json"); // Gets categories from JSON
-  res.json(categories);
+  const categories = readDataFile("data/categories.json"); // Get categories from JSON file
+  res.json(categories); // Respond with categories in JSON format
 });
 
-// Rendering Section - using our EJS Template Engine
+// Our books reviews W.I.P
+app.get("/reviews-list", (req, res) => {
+  const reviews = readDataFile("data/books.json"); // Get reviews from JSON file
+  res.json(reviews);
+});
+
+// app.get("/users", (req, res) => {
+//   const users = readDataFile("data/users.json"); // Get reviews from JSON file
+//   res.json(users);
+// });
+
+// Render books list with EJS
+// app.get("/books-list", (req, res) => {
+//   const books = readDataFile("data/books.json"); // Get books from JSON file
+//   res.render("home", { home });
+// });
+
+// To get our Book-list
 app.get("/books-list", (req, res) => {
-  const books = readDataFile("data/books.json"); // Gets books from JSON
+  const books = readDataFile("data/books.json"); // Get books from JSON file
   res.render("books", { books: books });
 });
 
-app.get("/authors-list", (req, res) => {
-  const authors = readDataFile("data/authors.json"); // Gets authors from JSON
-  res.render("authors", { authors: authors });
-});
+// // Render authors list with EJS
+// app.get("/authors-list", (req, res) => {
+//   const authors = readDataFile("data/authors.json"); // Get authors from JSON file
+//   res.render("authors", { authors: authors });
+// });
 
+// Render categories list with EJS
 app.get("/categories-list", (req, res) => {
-  const categories = readDataFile("data/categories.json"); // Gets categories from JSON
+  const categories = readDataFile("data/categories.json"); // Get categories from JSON file
   res.render("categories", { categories: categories });
 });
 
-app.get("/books-list", (req, res) => {
-  const books = readDataFile("data/books.json"); // Gets books from JSON
-  res.render("books", { books: books });
-});
+// This works
+// POST route to add a new book
+// app.post("/books", (req, res) => {
+//   const { bookName, bookAuthor, bookPages, bookPrice } = req.body;
+//   const newBook = {
+//     // bookId,
+//     bookName,
+//     bookAuthor,
+//     bookPages,
+//     bookPrice,
+//     bookState: "Available",
+//     isFavorited: false,
+//   };
+//   const books = readDataFile("data/books.json");
+//   books.push(newBook);
+//   writeDataFile("data/books.json", books); // Save updated books list to JSON
+//   res.redirect("/books");
+// });
 
-app.get("/authors-list", (req, res) => {
-  const authors = readDataFile("data/authors.json"); // Gets authors from JSON
-  res.render("authors", { authors: authors });
-});
-
-app.get("/categories-list", (req, res) => {
-  const categories = readDataFile("data/categories.json"); // Gets categories from JSON
-  res.render("categories", { categories: categories });
-});
-
-//  Using POST route to add a new book, if you're a bibliophile of course!
+// This should replace the code above, for listing books in order
 app.post("/books", (req, res) => {
   const { bookName, bookAuthor, bookPages, bookPrice } = req.body;
+  const books = readDataFile("data/books.json");
+  const maxId =
+    books.length > 0 ? Math.max(...books.map((book) => book.id)) : 0;
   const newBook = {
+    id: maxId + 1, // Increment the highest id by 1
     bookName,
     bookAuthor,
     bookPages,
     bookPrice,
     bookState: "Available",
+    isFavorited: false, // Initially, the book is not favorited
   };
-  const books = readDataFile("data/books.json");
   books.push(newBook);
-  writeDataFile("data/books.json", books); // Should enable persistence in updating books list to JSON
-  res.redirect("/books-list");
+  writeDataFile("data/books.json", books);
+  res.redirect("/books"); // Redirect to the list of books
 });
 
-// Using POST route to add a new author
-app.post("/authors", (req, res) => {
-  const { authorName, authorBio } = req.body;
-  const newAuthor = { authorName, authorBio };
-  const authors = readDataFile("data/authors.json");
-  authors.push(newAuthor);
-  writeDataFile("data/authors.json", authors); //Should enable persistence in updating authors list to JSON
-  res.redirect("/authors-list");
+//This works!
+// DELETE route for books
+app.post("/books/delete/:id", (req, res) => {
+  const bookId = req.params.id;
+  const books = readDataFile("data/books.json");
+  const bookIndex = books.findIndex((book) => book.id == bookId);
+  if (bookIndex === -1) {
+    return res.status(404).send("Book not found");
+  }
+  books.splice(bookIndex, 1);
+  writeDataFile("data/books.json", books);
+  res.redirect("/books");
 });
 
-// Using POST route to add a new category
+// temp
+app.get("reviews", (req, res) => {
+  res.render("/reviews", { reviews: reviews });
+});
+
+// Render reviews list with EJS
+app.get("/reviews", (req, res) => {
+  const reviews = readDataFile("data/books.json"); // Get reviews from JSON file
+  if (req.query.id) {
+    const review = reviews[req.query.id];
+    if (!review) {
+      return res.status(404).send("Review not found");
+    }
+    res.render("reviews", {
+      reviews: reviews,
+      editReview: review,
+      editId: req.query.id,
+    });
+  } else {
+    res.render("reviews", { reviews: reviews });
+  }
+});
+
+// Post a Review
+app.post("/reviews", (req, res) => {
+  const { author, text } = req.body;
+  const newReview = { author, text };
+  const reviews = readDataFile("data/books.json");
+  reviews.push(newReview);
+  writeDataFile("data/reviews.json", reviews);
+  res.redirect("/reviews");
+});
+
+// To Edit
+app.post("/reviews/edit/:id", (req, res) => {
+  const { author, text } = req.body;
+  const reviews = readDataFile("data/books.json");
+  const review = reviews[req.params.id];
+  if (!review) {
+    return res.status(404).send("Review not found");
+  }
+  review.author = author;
+  review.text = text;
+  writeDataFile("data/books.json", reviews);
+  res.redirect("/reviews");
+});
+
+// To Delete can use delete instead
+app.get("/reviews/delete/:id", (req, res) => {
+  const reviews = readDataFile("data/books.json");
+  const reviewIndex = req.params.id;
+  if (reviewIndex < 0 || reviewIndex >= reviews.length) {
+    return res.status(404).send("Review not found");
+  }
+  reviews.splice(reviewIndex, 1); // Remove the review
+  writeDataFile("data/books.json", reviews);
+  res.redirect("/reviews");
+});
+
+// POST route to add a new category
 app.post("/categories", (req, res) => {
   const { categoryName, categoryDescription } = req.body;
   const newCategory = { categoryName, categoryDescription };
   const categories = readDataFile("data/categories.json");
   categories.push(newCategory);
-  writeDataFile("data/categories.json", categories); //Should enable persistence in updating categories list to JSON
+  writeDataFile("data/categories.json", categories); // Save updated categories list to JSON
   res.redirect("/categories-list");
 });
 
-// These are tests
-// Using POST route to add new book
-app.post("/", (req, res) => {
-  const inputBookName = req.body.bookName;
-  const inputBookAuthor = req.body.bookAuthor;
-  const inputBookPages = req.body.bookPages;
-  const inputBookPrice = req.body.bookPrice;
+//   // After adding the book, redirect to the homepage
+//   res.redirect("/");
+// });
 
-  // Adds a new book to the books array
-  books.push({
-    bookName: inputBookName,
-    bookAuthor: inputBookAuthor,
-    bookPages: inputBookPages,
-    bookPrice: inputBookPrice,
-    bookState: "Available",
-  });
-
-  // After adding the book, redirect to the homepage
-  res.redirect("/");
-}); //fix
-
-// For Server middleware for error-handling
+// Our Error-handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send({ message: "Something went wrong!" });
 });
 
-//
-
-// // to read the json files
-// function readJsonFile(filePath) {
-//   return new Promise((resolve, reject) => {
-//     fs.readFile(filePath, "utf8", (err, data) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         resolve(JSON.parse(data));
-//       }
-//     });
-//   });
-// }
-
-// // To render the books to the page
-// app.get("/", async (req, res) => {
-//   try {
-//     const books = await readJsonFile(
-//       path.join(__dirname, "data", "books.json")
-//     );
-//     res.render("index", { books: books, title: "Bookstore" });
-//   } catch (error) {
-//     res.status(500).send("Error reading books data");
-//   }
-// });
-
-// For the Server Start
+// Start server
 app.listen(port, () => {
-  console.log(`Express is running on http://localhost:${port}`);
+  console.log(`LiberUnited is running on port ${port}`);
 });

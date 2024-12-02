@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LiberUnited Book Management System</title>
+    <!-- Link to Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Link to custom CSS -->
+    <link rel="stylesheet" href="/styles/style.css" />
+  </head>
+  <body>
+    <div class="container mt-4">
+      <!-- Main Heading -->
+      <h1 class="text-center mb-4">
+        Welcome to LiberUnited Book Management System
+      </h1>
+
+      <img
+        src="/images/being-a-full-stack-dev.jpg"
+        alt="being-a-full-stack-dev"
+        width="800px"
+        height="300px"
+        class="img-fluid mb-4"
+        class="center-img mb-4"
+      />
+      <!-- Section for  OurBooks -->
+      <h2 class="mb-4">Our Books</h2>
+      <ul class="list-group">
+        <% books.forEach(book => { %>
+        <li class="list-group-item">
+          <strong><%= book.bookName %></strong> by <%= book.bookAuthor %>
+        </li>
+        <% }) %>
+      </ul>
+
+      <!-- Our Navigation Links -->
+      <div class="mt-4">
+        <a href="/users" class="btn btn-info ml-2">User Dashboard</a>
+        <a href="/books-list" class="btn btn-primary">All Books</a>
+        <a href="/categories-list" class="btn btn-success ml-2"
+          >View Categories</a
+        >
+        <a href="/reviews-list" class="btn btn-info ml-2">Reviews</a>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

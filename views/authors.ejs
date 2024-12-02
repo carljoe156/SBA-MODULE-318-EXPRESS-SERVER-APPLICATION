@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/public/styles/style.css" />
+    <title>Authors</title>
+    <link rel="stylesheet" type="text/css" href="/styles/style.css" />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <!-- Display authors -->
+    <h1>Our Authors</h1>
+
+    Display authors
     <ul>
       <% authors.forEach(author => { %>
       <li><%= author.authorName %> - Bio: <%= author.authorBio %></li>
       <% }) %>
     </ul>
 
-    <!-- Form to add a new author -->
+    <!-- Form to add a new author  -->
     <h2>Add a New Author</h2>
     <form action="/authors" method="POST">
       <input
@@ -29,8 +29,9 @@
     </form>
 
     <!-- Link to other pages -->
-    <br />
-    <a href="/books-list">View Books</a>
-    <a href="/categories-list">View Categories</a>
+    - <br />
+    <a href="/books-list">All Books</a>
+    <a href="/categories-list">Categories</a>
+    <a href="/reviews-list">Reviews</a>
   </body>
 </html>

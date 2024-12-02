@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/public/styles/style.css" />
+    <title>Categories</title>
+    <link rel="stylesheet" type="text/css" href="/styles/style.css" />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1>Categories</h1>
 
-    <!-- Display the categories -->
+    <!-- Display categories -->
     <ul>
       <% categories.forEach(category => { %>
       <li>
@@ -18,7 +17,7 @@
       <% }) %>
     </ul>
 
-    <!-- Input Here: Form to add a new category -->
+    <!-- Form to add a new category -->
     <h2>Add a New Category</h2>
     <form action="/categories" method="POST">
       <input
@@ -36,9 +35,10 @@
       <button type="submit">Add Category</button>
     </form>
 
-    <!-- Link to our other pages -->
+    <!-- Links to other pages -->
     <br />
-    <a href="/books-list">View Books</a>
-    <a href="/authors-list">View Authors</a>
+    <a href="/users" class="btn btn-info ml-2">User Dashboard</a>
+    <a href="/books-list">All Books</a>
+    <a href="/authors-list">Authors</a>
   </body>
 </html>

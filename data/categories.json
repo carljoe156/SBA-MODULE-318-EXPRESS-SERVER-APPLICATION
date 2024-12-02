@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Self-help"
+  },
+  {
+    "id": 2,
+    "name": "Motivational"
+  },
+  {
+    "categoryName": "Motivational ",
+    "categoryDescription": "Our self help guide..."
+  }
+]
