@@ -28,14 +28,18 @@
               <p class="card-text">
                 <strong>Price: </strong>$<%= book.bookPrice %>
               </p>
-
+              <a href="/books/edit/<%= book.id %>" class="btn btn-warning"
+                >Edit</a
+              >
+              >
               <!-- Delete Button -->
               <form
                 action="/books/delete/<%= book.id %>"
                 method="POST"
                 style="display: inline"
               >
-                <button type="submit" class="btn btn-danger">Delete</button>
+                <input type="hidden" name="_method" value="DELETE" />
+                <button type="submit">Delete</button>
               </form>
             </div>
           </div>

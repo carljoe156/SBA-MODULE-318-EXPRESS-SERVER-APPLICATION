@@ -15,12 +15,41 @@ router.get("/", (req, res) => {
   res.render("home", { books });
 });
 
+router.get("/edit/:id", (req, res) => {
+  const bookId = parseInt(req.params.id);
+  const books = readBooksData();
+  const book = books.find((b) => b.id === bookId);
+
+  if (book) {
+    res.render("editBook", { book });
+  } else {
+    res.status(404).send("Book not found.");
+  }
+});
+
+router.patch("/edit/:id:", (req, res) => {
+  const bookId = parseInt(req.params.id);
+  const { bookName, bookAuthor, bookPrice } = req.body;
+
+  const books = readBooksData();
+  const bookIndex = books.findIndex((b) => b.id === bookId);
+
+  if (bookIndex !== -1) {
+    // Update the book's details
+    books[bookIndex] = { id: bookId, bookName, bookAuthor, bookPrice };
+    writeBooksData(books);
+    res.redirect("/books");
+  } else {
+    res.status(404).send("Book not found.");
+  }
+});
+
 // Updates a book to book-list
-router.patch("/:id", (req, res) => {
-  const bookId = req.params.id;
+router.patch("/:id", validateBookInput, (req, res) => {
+  const bookId = parseInt(req.params.id);
   const updatedBook = req.body;
   const books = readBooksData();
-  const bookIndex = books.findIndex((b) => b.id === parseInt(bookId));
+  const bookIndex = books.findIndex((b) => b.id === bookId);
 
   if (bookIndex !== -1) {
     books[bookIndex] = { ...books[bookIndex], ...updatedBook };
@@ -32,7 +61,7 @@ router.patch("/:id", (req, res) => {
 });
 
 // For Deleting a book form the book-list
-router.delete("/:id", (req, res) => {
+router.delete("/delete/:id", (req, res) => {
   const bookId = req.params.id;
   let books = readBooksData();
   books = books.filter((b) => b.id !== parseInt(bookId));

@@ -1,109 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title><%= title %></title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %></title>
-    <!-- Using Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <title>Post a Review</title>
   </head>
   <body>
-    <div class="container mt-5">
-      <% if (!book) { %>
-      <h1 class="mb-4">Books with Reviews</h1>
+    <h1>Post a Review</h1>
 
-      <% if (books.length > 0) { %> <% books.forEach(function(book) { %>
-      <div class="card mb-4">
-        <div class="card-body">
-          <h2 class="card-title">
+    <!-- Form to submit a review -->
+    <form action="/reviews" method="POST">
+      <div>
+        <label for="bookId">Book:</label>
+        <select name="bookId" id="bookId" required>
+          <% books.forEach(function(book) { %>
+          <option value="<%= book.id %>">
             <%= book.bookName %> by <%= book.bookAuthor %>
-          </h2>
-          <p><strong>Price:</strong> $<%= book.bookPrice %></p>
-          <h3>Reviews:</h3>
-          <ul class="list-group">
-            <% book.reviews.forEach(function(review) { %>
-            <li class="list-group-item">
-              <strong
-                ><%= review.reviewerName %> (Rating: <%= review.rating
-                %>)</strong
-              >
-              <p><%= review.comment %></p>
-            </li>
-            <% }); %>
-          </ul>
-          <a href="/reviews/<%= book.id %>" class="btn btn-primary mt-3"
-            >View/Add Review</a
-          >
-        </div>
+          </option>
+          <% }) %>
+        </select>
       </div>
-      <% }); %> <% } else { %>
-      <p>No books with reviews available.</p>
-      <% } %> <% } else { %>
-      <h1 class="mb-4">
-        Reviews for <%= book.bookName %> by <%= book.bookAuthor %>
-      </h1>
-      <h2>Reviews</h2>
 
-      <ul class="list-group mb-4">
-        <% if (book.reviews.length > 0) { %> <%
-        book.reviews.forEach(function(review) { %>
-        <li class="list-group-item">
-          <strong
-            ><%= review.reviewerName %> (Rating: <%= review.rating %>)</strong
-          >
-          <p><%= review.comment %></p>
-        </li>
-        <% }); %> <% } else { %>
-        <li class="list-group-item">No reviews yet.</li>
-        <% } %>
-      </ul>
+      <div>
+        <label for="reviewerName">Your Name:</label>
+        <input type="text" name="reviewerName" id="reviewerName" required />
+      </div>
 
-      <!-- Add a new review -->
-      <h2>Add a Review</h2>
-      <form action="/reviews/<%= book.id %>" method="POST">
-        <div class="form-group">
-          <label for="reviewerName">Your Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            name="reviewerName"
-            required
-          />
-        </div>
+      <div>
+        <label for="rating">Rating (1 to 5):</label>
+        <input
+          type="number"
+          name="rating"
+          id="rating"
+          min="1"
+          max="5"
+          required
+        />
+      </div>
 
-        <div class="form-group">
-          <label for="rating">Rating:</label>
-          <input
-            type="number"
-            class="form-control"
-            name="rating"
-            min="1"
-            max="5"
-            required
-          />
-        </div>
+      <div>
+        <label for="comment">Comment:</label>
+        <textarea name="comment" id="comment" rows="4" required></textarea>
+      </div>
 
-        <div class="form-group">
-          <label for="comment">Comment:</label>
-          <textarea class="form-control" name="comment" required></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-success">Submit Review</button>
-      </form>
-
-      <a href="/books/<%= book.id %>" class="btn btn-secondary mt-3"
-        >Back to Book</a
-      >
-      <% } %>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <div>
+        <button type="submit">Submit Review</button>
+      </div>
+    </form>
   </body>
 </html>

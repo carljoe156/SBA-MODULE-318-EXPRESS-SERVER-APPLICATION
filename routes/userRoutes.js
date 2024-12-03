@@ -1,86 +1,82 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
+
 const router = express.Router();
 
-router.get("/users", (req, res) => {
-  const books = readCollectionsData();
-  res.render("users", { books });
-});
+const dataFilePath = path.join(__dirname, "users.json");
 
-// This function helpers to read/write to JSON files
-function readDataFile(filePath) {
-  const data = fs.readFileSync(filePath);
+const readData = () => {
+  const data = fs.readFileSync(dataFilePath, "utf-8");
   return JSON.parse(data);
-}
+};
 
-function writeDataFile(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-}
+const writeData = (data) => {
+  fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf-8");
+};
 
-// THis Route: Shows edits  on the collection page
-router.get("/edit-collection/:collectionId", (req, res) => {
-  const collectionId = req.params.collectionId; // Get collection ID from URL
-  const collections = readDataFile("data/collections.json"); // Get all collections
-  const collection = collections.find((c) => c.id === collectionId); // Find specific collection
+// Route to get all users
+router.get("/users", (req, res) => {
+  const users = readData(); // Read data from users.json
+  res.json(users);
+});
 
-  if (collection) {
-    // Fetch books that belong to this collection
-    res.render("edit-book", { collectionId, books: collection.books });
+// Route to get a single user by ID
+router.get("/users/:id", (req, res) => {
+  const users = readData();
+  const userId = parseInt(req.params.id);
+  const user = users.find((u) => u.id === userId);
+  if (user) {
+    res.json(user);
   } else {
-    res.status(404).send("Collection not found");
+    res.status(404).send("User not found");
   }
 });
 
-// This Route: Updates the collection (Adds/Updates/Deletes the Books)
-router.post("/update-collection/:collectionId", (req, res) => {
-  const collectionId = req.params.collectionId;
-  const collections = readDataFile("data/collections.json"); // Get all collections
-  const collection = collections.find((c) => c.id === collectionId); // Find specific collection
-
-  if (collection) {
-    const updatedBooks = collection.books.map((book) => {
-      const updatedBook = { ...book };
-
-      // Checks to see if there are updates for this book
-      if (req.body[`bookName-${book.id}`]) {
-        updatedBook.bookName = req.body[`bookName-${book.id}`];
-        updatedBook.bookAuthor = req.body[`bookAuthor-${book.id}`];
-        updatedBook.bookPages = req.body[`bookPages-${book.id}`];
-        updatedBook.bookPrice = req.body[`bookPrice-${book.id}`];
-      }
-
-      return updatedBook;
-    });
-
-    // This should handle book deletion
-    const action = req.body.action;
-    if (action && action.startsWith("delete-")) {
-      const bookIdToDelete = action.split("-")[1];
-      collection.books = collection.books.filter(
-        (book) => book.id !== bookIdToDelete
-      ); // Remove book
-    } else {
-      collection.books = updatedBooks; // Update collection books
-    }
-
-    // This should handle new books
-    if (req.body.action === "add") {
-      const newBook = {
-        id: Date.now().toString(),
-        bookName: req.body.newBookName,
-        bookAuthor: req.body.newBookAuthor,
-        bookPages: req.body.newBookPages,
-        bookPrice: req.body.newBookPrice,
-      };
-      collection.books.push(newBook); // Add new book
-    }
-
-    // Saves an updated collection
-    writeDataFile("data/collections.json", collections);
-    res.redirect(`/users/edit-collection/${collectionId}`); // Redirect back to the same collection
-  } else {
-    res.status(404).send("Collection not found");
-  }
+// Route to create a new user
+router.post("/users", (req, res) => {
+  const { name, email } = req.body;
+  const users = readData();
+  const newUser = {
+    id: users.length + 1, // Auto-increment ID
+    name,
+    email,
+  };
+  users.push(newUser);
+  writeData(users); // Write the updated data back to users.json
+  res.status(201).json(newUser);
 });
 
+// Route to update a user by ID
+router.put("/users/:id", (req, res) => {
+  const users = readData();
+  const userId = parseInt(req.params.id);
+  const { name, email } = req.body;
+
+  const userIndex = users.findIndex((u) => u.id === userId);
+  if (userIndex === -1) {
+    return res.status(404).send("User not found");
+  }
+
+  users[userIndex] = { id: userId, name, email };
+  writeData(users); // Write the updated data back to users.json
+  res.json(users[userIndex]);
+});
+
+// Route to delete a user by ID
+router.delete("/users/:id", (req, res) => {
+  const users = readData();
+  const userId = parseInt(req.params.id);
+
+  const userIndex = users.findIndex((u) => u.id === userId);
+  if (userIndex === -1) {
+    return res.status(404).send("User not found");
+  }
+
+  users.splice(userIndex, 1); // Remove the user from the array
+  writeData(users); // Write the updated data back to users.json
+  res.status(200).send("User deleted");
+});
+
+// Export the router
 module.exports = router;

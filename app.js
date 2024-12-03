@@ -3,6 +3,7 @@ const port = 3000;
 const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
+const methodOverride = require("method-override");
 
 // Middleware
 const logger = require("./middlewares/logger");
@@ -17,7 +18,10 @@ const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
-let books = [];
+// Our MethodOverride
+app.use(methodOverride("_method"));
+
+// let books = [];
 
 // Sets the view engine
 app.set("view engine", "ejs");
@@ -60,12 +64,12 @@ function writeDataFile(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 // W.I.P
-app.get("/users", (req, res) => {
-  const users = readDataFile("data/users.json");
-  const books = readDataFile("data/books.json"); // Get books from JSON file
-  const authors = readDataFile("data/authors.json"); // Get authors from JSON file
-  res.render("users", { users: users, books, authors }); //
-});
+// app.get("/users", (req, res) => {
+//   const collection = readDataFile("data/collections.json");
+//   const books = readDataFile("data/books.json"); // Get books from JSON file
+//   const authors = readDataFile("data/authors.json"); // Get authors from JSON file
+//   res.render("users", { users, books: users, books, authors }); //
+// });
 
 // Home route We want to list our books on the page
 // Display authors
@@ -100,9 +104,15 @@ app.get("/categories", (req, res) => {
 });
 
 // Our books reviews W.I.P
-app.get("/reviews-list", (req, res) => {
-  const reviews = readDataFile("data/books.json"); // Get reviews from JSON file
-  res.json(reviews);
+// app.get("/reviews-list", (req, res) => {
+//   const reviews = readDataFile("data/books.json"); // Get reviews from JSON file
+//   res.json(reviews);
+// });
+
+app.get("/reviews", (req, res) => {
+  res.render("reviews", {
+    title: reviews, // Pass books data to the view
+  });
 });
 
 // app.get("/users", (req, res) => {
@@ -121,12 +131,6 @@ app.get("/books-list", (req, res) => {
   const books = readDataFile("data/books.json"); // Get books from JSON file
   res.render("books", { books: books });
 });
-
-// // Render authors list with EJS
-// app.get("/authors-list", (req, res) => {
-//   const authors = readDataFile("data/authors.json"); // Get authors from JSON file
-//   res.render("authors", { authors: authors });
-// });
 
 // Render categories list with EJS
 app.get("/categories-list", (req, res) => {
@@ -187,63 +191,42 @@ app.post("/books/delete/:id", (req, res) => {
   res.redirect("/books");
 });
 
-// temp
-app.get("reviews", (req, res) => {
-  res.render("/reviews", { reviews: reviews });
-});
+// app.delete("/books/delete/:id", (req, res) => {
+//   const bookId = req.params.id;
+//   const books = readDataFile("data/books.json");
+//   const bookIndex = books.findIndex((book) => book.id == bookId);
 
-// Render reviews list with EJS
-app.get("/reviews", (req, res) => {
-  const reviews = readDataFile("data/books.json"); // Get reviews from JSON file
-  if (req.query.id) {
-    const review = reviews[req.query.id];
-    if (!review) {
-      return res.status(404).send("Review not found");
-    }
-    res.render("reviews", {
-      reviews: reviews,
-      editReview: review,
-      editId: req.query.id,
-    });
-  } else {
-    res.render("reviews", { reviews: reviews });
+//   if (bookIndex === -1) {
+//     return res.status(404).send("Book not found");
+//   }
+
+//   books.splice(bookIndex, 1); // Remove the book from the array
+//   writeDataFile("data/books.json", books); // Write the updated array to the file
+//   res.redirect("/books"); // Redirect to the updated list of books
+// });
+
+app.put("/books/:bookId/reviews/:reviewId", (req, res) => {
+  const bookId = parseInt(req.params.bookId);
+  const reviewId = parseInt(req.params.reviewId);
+  const updatedReview = req.body;
+  const books = readBooksData();
+  const book = books.find((b) => b.id === bookId); // Find the book by ID
+  if (!book) {
+    return res.status(404).json({ message: "Book not found" });
   }
-});
 
-// Post a Review
-app.post("/reviews", (req, res) => {
-  const { author, text } = req.body;
-  const newReview = { author, text };
-  const reviews = readDataFile("data/books.json");
-  reviews.push(newReview);
-  writeDataFile("data/reviews.json", reviews);
-  res.redirect("/reviews");
-});
+  const review = book.reviews.find((r) => r.id === reviewId); // Find the review by ID
 
-// To Edit
-app.post("/reviews/edit/:id", (req, res) => {
-  const { author, text } = req.body;
-  const reviews = readDataFile("data/books.json");
-  const review = reviews[req.params.id];
   if (!review) {
-    return res.status(404).send("Review not found");
+    return res.status(404).json({ message: "Review not found" });
   }
-  review.author = author;
-  review.text = text;
-  writeDataFile("data/books.json", reviews);
-  res.redirect("/reviews");
-});
+  // Our review listings
+  review.reviewerName = updatedReview.reviewerName || review.reviewerName;
+  review.rating = updatedReview.rating || review.rating;
+  review.comment = updatedReview.comment || review.comment;
+  writeBooksData(books);
 
-// To Delete can use delete instead
-app.get("/reviews/delete/:id", (req, res) => {
-  const reviews = readDataFile("data/books.json");
-  const reviewIndex = req.params.id;
-  if (reviewIndex < 0 || reviewIndex >= reviews.length) {
-    return res.status(404).send("Review not found");
-  }
-  reviews.splice(reviewIndex, 1); // Remove the review
-  writeDataFile("data/books.json", reviews);
-  res.redirect("/reviews");
+  res.json(review);
 });
 
 // POST route to add a new category
@@ -254,6 +237,24 @@ app.post("/categories", (req, res) => {
   categories.push(newCategory);
   writeDataFile("data/categories.json", categories); // Save updated categories list to JSON
   res.redirect("/categories-list");
+});
+
+//Temp
+// POST route to add a new review
+// POST route to add a review for a specific book
+app.post("/reviews", (req, res) => {
+  const { reviewerName, rating, comment, bookId } = req.body;
+  const newReview = { reviewerName, rating, comment };
+  const books = readDataFile("data/books.json");
+  const book = books.find((b) => b.id === bookId);
+
+  if (book) {
+    book.reviews.push(newReview);
+    writeDataFile("data/books.json", books);
+    res.redirect(`/books/${bookId}`);
+  } else {
+    res.status(404).send("Book not found.");
+  }
 });
 
 //   // After adding the book, redirect to the homepage

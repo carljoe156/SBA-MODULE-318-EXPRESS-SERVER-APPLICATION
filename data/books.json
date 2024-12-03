@@ -4,42 +4,103 @@
     "bookName": "Rudest Book Ever",
     "bookAuthor": "Shwetabh Gangwar",
     "bookPrice": 240,
-    "reviews": []
+    "reviews": [
+      {
+        "reviewerName": "John Doe",
+        "rating": 5,
+        "comment": "A timeless classic with captivating characters."
+      },
+      {
+        "reviewerName": "Jane Smith",
+        "rating": 4,
+        "comment": "Great story, but the pacing could have been better."
+      }
+    ]
   },
   {
     "id": 2,
     "bookName": "Do Epic Shit",
     "bookAuthor": "Ankur Warikoo",
     "bookPrice": 200,
-    "reviews": []
+    "reviews": [
+      {
+        "reviewerName": "John Doe",
+        "rating": 5,
+        "comment": "A timeless classic with captivating characters."
+      },
+      {
+        "reviewerName": "Jane Smith",
+        "rating": 4,
+        "comment": "Great story, but the pacing could have been better."
+      }
+    ]
   },
   {
     "id": 3,
+    "bookName": "To Kill a Mockingbird",
+    "bookAuthor": "Harper Lee",
+    "bookPrice": 12.99,
+    "reviews": [
+      {
+        "reviewerName": "Alice Brown",
+        "rating": 5,
+        "comment": "An incredible book that teaches important life lessons."
+      }
+    ]
+  },
+  {
+    "id": 4,
     "bookName": "Atomic Habits",
     "bookAuthor": "James Clear",
     "bookPrice": 200,
-    "reviews": []
+    "reviews": [
+      {
+        "reviewerName": "John Doe",
+        "rating": 5,
+        "comment": "A timeless classic with captivating characters."
+      },
+      {
+        "reviewerName": "Jane Smith",
+        "rating": 4,
+        "comment": "Great story, but the pacing could have been better."
+      }
+    ]
   },
   {
     "id": 5,
     "bookName": "A Christmas Carol",
     "bookAuthor": "Charles Dickens",
     "bookPrice": 150,
-    "reviews": []
-  },
-  {
-    "id": 6,
-    "bookName": "Atomic Habits",
-    "bookAuthor": "James Clear",
-    "bookPrice": 200,
-    "reviews": []
+    "reviews": [
+      {
+        "reviewerName": "John Doe",
+        "rating": 5,
+        "comment": "A timeless classic with captivating characters."
+      },
+      {
+        "reviewerName": "Jane Smith",
+        "rating": 4,
+        "comment": "Great story, but the pacing could have been better."
+      }
+    ]
   },
   {
     "id": 7,
     "bookName": "Moby Dick",
     "bookAuthor": "Herman Melville",
     "bookPrice": 500,
-    "reviews": []
+    "reviews": [
+      {
+        "reviewerName": "John Doe",
+        "rating": 5,
+        "comment": "A timeless classic with captivating characters."
+      },
+      {
+        "reviewerName": "Jane Smith",
+        "rating": 4,
+        "comment": "Great story, but the pacing could have been better."
+      }
+    ]
   },
   {
     "id": 8,
@@ -47,23 +108,18 @@
     "bookAuthor": "Jane Austen",
     "bookPrice": 300,
     "bookState": "Available",
-    "reviews": []
-  },
-  {
-    "id": 9,
-    "bookName": "Brave New World",
-    "bookAuthor": "Aldous Huxley",
-    "bookPrice": 200,
-    "bookState": "Available",
-    "isFavorited": false
-  },
-  {
-    "id": 10,
-    "bookName": "To Kill a Mockingbird",
-    "bookAuthor": "Harper Lee",
-    "bookPrice": 200,
-    "bookState": "Available",
-    "isFavorited": false
+    "reviews": [
+      {
+        "reviewerName": "John Doe",
+        "rating": 5,
+        "comment": "A timeless classic with captivating characters."
+      },
+      {
+        "reviewerName": "Jane Smith",
+        "rating": 4,
+        "comment": "Great story, but the pacing could have been better."
+      }
+    ]
   },
   {
     "id": 11,
@@ -78,6 +134,30 @@
     "bookName": "The Perks Of Being A Wallflower",
     "bookAuthor": "Stephen Chbosky",
     "bookPrice": "100",
+    "bookState": "Available",
+    "isFavorited": false
+  },
+  {
+    "id": 13,
+    "bookName": "The Sun is also Rises",
+    "bookAuthor": "Ernest Hemingway",
+    "bookPrice": "200",
+    "bookState": "Available",
+    "isFavorited": false
+  },
+  {
+    "id": 15,
+    "bookName": "War and Peace",
+    "bookAuthor": "Leo Tolstoy",
+    "bookPrice": "100",
+    "bookState": "Available",
+    "isFavorited": false
+  },
+  {
+    "id": 16,
+    "bookName": "The Bible",
+    "bookAuthor": "Unknown",
+    "bookPrice": "200",
     "bookState": "Available",
     "isFavorited": false
   }

@@ -1,95 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Edit Book</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Book Collection</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   </head>
   <body>
-    <h1>Your Book Collection</h1>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Edit Book</h1>
 
-    <!-- Should display current books in the collection -->
-    <h2>Current Books in Collection</h2>
-    <form action="/users/update-collection/<%= collectionId %>" method="POST">
-      <% books.forEach(book => { %>
-      <div>
-        <h3><%= book.bookName %> by <%= book.bookAuthor %></h3>
-        <label for="bookName-<%= book.id %>">Book Name:</label>
-        <input
-          type="text"
-          id="bookName-<%= book.id %>"
-          name="bookName-<%= book.id %>"
-          value="<%= book.bookName %>"
-          required
-        /><br />
+      <!-- Here we should be able to Edit the Book Form -->
+      <form action="/books/edit/<%= book.id %>" method="POST" class="row g-3">
+        <!-- this simulates the  PATCH method -->
+        <input type="hidden" name="_method" value="PATCH" />
 
-        <label for="bookAuthor-<%= book.id %>">Book Author:</label>
-        <input
-          type="text"
-          id="bookAuthor-<%= book.id %>"
-          name="bookAuthor-<%= book.id %>"
-          value="<%= book.bookAuthor %>"
-          required
-        /><br />
+        <div class="col-md-4">
+          <input
+            type="text"
+            name="bookName"
+            value="<%= book.bookName %>"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <input
+            type="text"
+            name="bookAuthor"
+            value="<%= book.bookAuthor %>"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <input
+            type="number"
+            name="bookPrice"
+            value="<%= book.bookPrice %>"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="col-12 mt-3">
+          <button type="submit" class="btn btn-primary">Update Book</button>
+        </div>
+      </form>
 
-        <label for="bookPages-<%= book.id %>">Pages:</label>
-        <input
-          type="number"
-          id="bookPages-<%= book.id %>"
-          name="bookPages-<%= book.id %>"
-          value="<%= book.bookPages %>"
-          required
-        /><br />
-
-        <label for="bookPrice-<%= book.id %>">Price:</label>
-        <input
-          type="number"
-          id="bookPrice-<%= book.id %>"
-          name="bookPrice-<%= book.id %>"
-          value="<%= book.bookPrice %>"
-          required
-        /><br />
-
-        <button type="submit" name="action" value="delete-<%= book.id %>">
-          Delete
-        </button>
-        <hr />
+      <!-- Back to Books list -->
+      <div class="mt-4">
+        <a href="/books" class="btn btn-secondary">Back to Book List</a>
       </div>
-      <% }) %>
-
-      <!-- Adds a New Book to the collection -->
-      <h3>Add a New Book</h3>
-      <label for="newBookName">New Book Name:</label>
-      <input type="text" id="newBookName" name="newBookName" required /><br />
-
-      <label for="newBookAuthor">New Book Author:</label>
-      <input
-        type="text"
-        id="newBookAuthor"
-        name="newBookAuthor"
-        required
-      /><br />
-
-      <label for="newBookPages">Pages:</label>
-      <input
-        type="number"
-        id="newBookPages"
-        name="newBookPages"
-        required
-      /><br />
-
-      <label for="newBookPrice">Price:</label>
-      <input
-        type="number"
-        id="newBookPrice"
-        name="newBookPrice"
-        required
-      /><br />
-
-      <button type="submit" name="action" value="add">Add New Book</button>
-    </form>
-
-    <br />
-    <a href="/users">Back to Dashboard</a>
+    </div>
   </body>
 </html>
